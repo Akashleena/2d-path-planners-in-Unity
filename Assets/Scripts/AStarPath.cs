@@ -72,7 +72,7 @@ public class AStarPath : MonoBehaviour {
             }
         }
         endTime = Time.realtimeSinceStartup - startTime;
-        writeToCSVFile.WriteCSV("A Star", endTime, totalCost, finalPath.Count);
+        writeToCSVFile.WriteCSV("A Star",endTime,totalCost,finalPath.Count);
         return finalPath;
     }
 

@@ -110,6 +110,7 @@ public class TerrainScript : MonoBehaviour {
 		maxZ = terrainSize.z- 2;
 		minHeight = 0;
 		maxHeight = terrainSize.y;
+		Debug.Log("maxHeight" + maxHeight);
 		stepSize = Mathf.Min(terrainSize.x, terrainSize.z) / 100; //TODO experiment
 		levelTimer=0.0f;
 		// Debug.Log("minX" + minX + " " + "maxX" + maxX + " " + "minZ" + minZ + " " + "maxZ" + maxZ + " " + minHeight + " " + maxHeight + " " + "terrainSize" + terrainSize);
@@ -258,7 +259,7 @@ public class TerrainScript : MonoBehaviour {
 		updateTimer = false;
 		endTime = (Time.realtimeSinceStartup - startTime);
 		statusText.text = "Solved! with " + nodes.Count + " nodes, cost=" + pathCost;
-		writeToCsv.WriteCSV("TRRT", levelTimer, pathCost, nodes.Count, endTime);
+		writeToCsv.WriteCSV("TRRT",endTime,pathCost,nodes.Count);
 
 	}
 	
