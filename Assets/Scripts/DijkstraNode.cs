@@ -9,7 +9,14 @@ public class DijkstraNode : MonoBehaviour {
     [SerializeField] private float weight = int.MaxValue;
     [SerializeField] private Transform parentNode = null;
     [SerializeField] private List<Transform> neighbourNode;
+    [SerializeField] private List<DijkstraNode> dNeighbourNode;
     [SerializeField] private bool walkable = true;
+    
+    public int igCost;//The cost of moving to the next square.
+    public int ihCost;//The distance to the goal from this node.
+
+    public int FCost { get { return igCost + ihCost; } }//Quick get function to add G cost and H Cost, and since we'll never need to edit FCost, we dont need a set function.
+
 
 	// Use this for initialization
 	void Start () {
@@ -61,6 +68,7 @@ public class DijkstraNode : MonoBehaviour {
     public void addNeighbourNode(Transform node)
     {
         this.neighbourNode.Add(node);
+        this.dNeighbourNode.Add(node.gameObject.GetComponent<DijkstraNode>());
     }
 
     // -------------------------------- Getters --------------------------------
@@ -72,6 +80,11 @@ public class DijkstraNode : MonoBehaviour {
     public List<Transform> getNeighbourNode()
     {
         List<Transform> result = this.neighbourNode;
+        return result;
+    }
+
+    public List<DijkstraNode> getDNeighbourNode() {
+        List<DijkstraNode> result = this.dNeighbourNode;
         return result;
     }
 

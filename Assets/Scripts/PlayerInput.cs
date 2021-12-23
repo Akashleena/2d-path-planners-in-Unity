@@ -9,6 +9,7 @@ public class PlayerInput : MonoBehaviour {
     private Transform startNode;
     private Transform endNode;
     private List<Transform> blockPath = new List<Transform>();
+    private List<Transform> currentPath = new List<Transform>();
 
 	// Update is called once per frame
 	void Update () {
@@ -125,22 +126,63 @@ public class PlayerInput : MonoBehaviour {
     /// <summary>
     /// Button for find path.
     /// </summary>
-    public void btnFindPath()
+    public void btnFindAStarPath()
     {   
         // Only find if there are start and end node.
         if (startNode != null && endNode != null)
         {
             // Execute Shortest Path.
-            ShortestPath finder = gameObject.GetComponent<ShortestPath>();
-            List<Transform> paths = finder.findShortestPath(startNode, endNode);
+            // ShortestPath finder = gameObject.GetComponent<ShortestPath>();
+            // List<Transform> paths = finder.findShortestPath(startNode, endNode);
 
-            // Colour the node red.
-            foreach (Transform path in paths)
+            // // Colour the node red.
+            // foreach (Transform path in paths)
+            // {
+            //     Renderer rend = path.GetComponent<Renderer>();
+            //     rend.material.color = Color.red;
+            // }
+            clearPreviousPath();
+            AStarPath pathFinder = gameObject.GetComponent<AStarPath>();
+            currentPath = pathFinder.FindAStartPath(startNode, endNode);
+
+            foreach (Transform path in currentPath)
             {
                 Renderer rend = path.GetComponent<Renderer>();
                 rend.material.color = Color.red;
             }
         }
+    }
+
+    public void btnFindDijkstraPath() {
+        if (startNode != null && endNode != null)
+        {
+            clearPreviousPath();
+            // Execute Shortest Path.
+            ShortestPath finder = gameObject.GetComponent<ShortestPath>();
+            currentPath = finder.findShortestPath(startNode, endNode);
+
+            // Colour the node red.
+            foreach (Transform path in currentPath)
+            {
+                Renderer rend = path.GetComponent<Renderer>();
+                rend.material.color = Color.red;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resets the previous generated path, if any.
+    /// </summary>
+    public void clearPreviousPath() {
+        if(currentPath.Count > 0) {
+            foreach (Transform path in currentPath)
+            {
+                Renderer rend = path.GetComponent<Renderer>();
+                rend.material.color = Color.white;
+            }
+        }
+
+        currentPath.Clear();
     }
 
     /// <summary>
