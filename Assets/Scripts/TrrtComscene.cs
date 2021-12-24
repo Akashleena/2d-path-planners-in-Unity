@@ -59,7 +59,7 @@ public class TrrtComscene : MonoBehaviour
     };
 
 
-    public float stepSize;
+    public float stepSize = 1.0f;
 
     private GameObject[] dijkstranodes;
     public Text coordText;
