@@ -65,7 +65,7 @@ public class Pathfinding : MonoBehaviour {
                 Debug.Log("update timer" + GridReference.updateTimer);
                 endTime = (Time.realtimeSinceStartup - startTime);
                 statusText.text = "Solved! with " + GridReference.totalNodes + " nodes, cost=" + GridReference.totalcost;
-                writeToCsv.WriteCSV("A star", GridReference.levelTimer, GridReference.totalcost, GridReference.totalNodes, endTime);
+                writeToCsv.WriteCSV("A star", endTime, GridReference.totalcost, GridReference.totalNodes);
             }
 
             foreach (Node NeighborNode in GridReference.GetNeighboringNodes(CurrentNode))//Loop through each neighbor of the current node

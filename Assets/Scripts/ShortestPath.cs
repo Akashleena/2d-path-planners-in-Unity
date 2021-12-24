@@ -50,7 +50,7 @@ public class ShortestPath : MonoBehaviour
         }
         // totalCost *= 0.001f;
         updateTimer = false;
-        writeToCsv.WriteCSV("Dijkstra", levelTimer, totalCost, result.Count, endTime);
+        writeToCsv.WriteCSV("Dijkstra", endTime, totalCost, result.Count);
         return result;
     }
 

@@ -170,6 +170,21 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
+     public void btnFindTrrtPath()
+    {   
+        // Only find if there are start and end node.
+        if (startNode != null && endNode != null)
+        {
+           
+            clearPreviousPath();
+            TrrtComscene trrtPath = gameObject.GetComponent<TrrtComscene>();
+            trrtPath.BeginSolving(10, startNode, endNode);
+            trrtPath.ContinueSolving();
+          
+        }
+    }
+
+
     /// <summary>
     /// Resets the previous generated path, if any.
     /// </summary>

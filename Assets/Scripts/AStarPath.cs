@@ -74,7 +74,7 @@ public class AStarPath : MonoBehaviour {
             levelTimer += Time.deltaTime;
         }
         endTime = Time.realtimeSinceStartup - startTime;
-        writeToCSVFile.WriteCSV("A Star", levelTimer, totalCost, finalPath.Count, endTime);
+        writeToCSVFile.WriteCSV("A Star",endTime,totalCost,finalPath.Count);
         return finalPath;
     }
 
