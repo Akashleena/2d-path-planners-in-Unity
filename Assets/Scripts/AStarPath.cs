@@ -9,6 +9,7 @@ public class AStarPath : MonoBehaviour {
     public GameObject csvObject;
     public DijkstraNode[] nodes;
     private float endTime;
+    private float levelTimer = 0.0f;
     private float startTime;
     private float totalCost = 0;
     
@@ -70,6 +71,7 @@ public class AStarPath : MonoBehaviour {
                     }
                 }
             }
+            levelTimer += Time.deltaTime;
         }
         endTime = Time.realtimeSinceStartup - startTime;
         writeToCSVFile.WriteCSV("A Star",endTime,totalCost,finalPath.Count);
