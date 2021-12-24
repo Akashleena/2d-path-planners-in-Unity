@@ -20,7 +20,7 @@ public class WriteToCSVFile : MonoBehaviour
         public float totalTime;
         public float averageTime;
         public float totalCost;
-        public float totalSimTime;
+        //public float totalSimTime;
 
         public int totalNodes;
     }

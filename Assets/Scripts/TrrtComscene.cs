@@ -90,8 +90,8 @@ public class TrrtComscene : MonoBehaviour
     public GameObject[] gameObjects;
     public GameObject csvObject;
     WriteToCSVFile writeToCsv;
-    public float levelTimer;
-    public bool updateTimer = true;
+    //public float levelTimer;
+   // public bool updateTimer = true;
     public float pathCost = 0;
     //public List<Vector3> obstacleCoord;
     public List<Transform> obstaclenodes = new List<Transform>();
@@ -106,7 +106,7 @@ public class TrrtComscene : MonoBehaviour
     {
 
 
-        //writeToCsv = csvObject.GetComponent<WriteToCSVFile>();
+        writeToCsv = csvObject.GetComponent<WriteToCSVFile>();
         linePrefab = Resources.Load("LinePrefab");
         pathPrefab = Resources.Load("PathPrefab");
 
@@ -122,7 +122,7 @@ public class TrrtComscene : MonoBehaviour
         maxHeight = 2;
         Debug.Log("maxHeight" + maxHeight);
         //stepSize = 10; //TODO experiment
-        levelTimer = 0.0f;
+       // levelTimer = 0.0f;
 
 
     }
@@ -206,10 +206,10 @@ public class TrrtComscene : MonoBehaviour
             i = n.parentInd;
 
         }
-        updateTimer = false;
+       // updateTimer = false;
         endTime = (Time.realtimeSinceStartup - startTime);
         Debug.Log("Solved! with " + nodes.Count + " nodes, cost=" + pathCost);
-        //	writeToCsv.WriteCSV("TRRT", levelTimer, pathCost, nodes.Count, endTime);
+        writeToCsv.WriteCSV("TRRT", endTime, pathCost, nodes.Count);
 
     }
 
@@ -339,9 +339,9 @@ public class TrrtComscene : MonoBehaviour
                     n = new Node(pos, nodes[closestInd].pos, closestInd, gameObject);
                     nodes.Add(n);
                     Debug.Log("Added node " + nodes.Count + ": " + n.pos.x + ", " + n.pos.y + ", " + n.pos.z);
-                    if (updateTimer)
-                        levelTimer += Time.deltaTime;
-                    Debug.Log("levelTimer" + levelTimer);
+                   // if (updateTimer)
+                     //   levelTimer += Time.deltaTime;
+                   // Debug.Log("levelTimer" + levelTimer);
 
 
                     //Determine whether we are close enough to goal
