@@ -13,8 +13,6 @@ ax = pp.plot.bar(x='NameofPP', y='TotalCost', rot=45)
 plt.savefig('TotalCost.png')
 ax = pp.plot.bar(x='NameofPP', y='TotalNodes', rot=45)
 plt.savefig('TotalNodes.png')
-ax = pp.plot.bar(x='NameofPP', y='TotalSimTime', rot=45)
-plt.savefig('TotalTime.png')
 plt.show()
 
 

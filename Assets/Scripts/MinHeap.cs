@@ -1,186 +1,154 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 
-public class MinHeap : MonoBehaviour
+namespace PathFindingBfs
 {
-
-    /// <summary>
-    /// The node class for the heap.
-    /// </summary>
-	public class BinaryNode
+    public class MinHeap<T>
     {
-        Transform node;
+        private const int InitialCapacity = 4;
 
-        public BinaryNode(Transform node)
+        private T[] _arr;
+        private int _lastItemIndex;
+        private IComparer<T> _comparer;
+
+        public MinHeap()
+            : this(InitialCapacity, Comparer<T>.Default)
         {
-            this.node = node;
         }
 
-        public Transform getNode()
+        public MinHeap(int capacity)
+            : this(capacity, Comparer<T>.Default)
         {
-            Transform result = this.node;
-            return result;
         }
 
-        public float getWeight()
+        public MinHeap(Comparison<T> comparison)
+            : this(InitialCapacity, Comparer<T>.Create(comparison))
         {
-            DijkstraNode n = node.GetComponent<DijkstraNode>();
-            float result = n.getWeight();
-            return result;
-        }
-    }
-
-    private List<BinaryNode> heap;
-
-    // Creating the heap.
-    public void createHeap(Transform node)
-    {
-        // Generate the heap list.
-        heap = new List<BinaryNode>();
-
-        // Add the first node into the heap.
-        heap.Add(new BinaryNode(node));
-    }
-
-
-    /// <summary>
-    /// Insert node into the heap
-    /// </summary>
-    /// <param name="node"></param>
-    public void insert(Transform node)
-    {
-        // Create the node.
-        BinaryNode bNode = new BinaryNode(node);
-
-        // Add to the heap.
-        heap.Add(bNode);
-
-        // Bubble up to sort the heap.
-        this.bubbleUp(heap.Count - 1);
-    }
-
-    /// <summary>
-    /// Extract the smallest node in the heap.
-    /// </summary>
-    /// <returns>Smallest weight node.</returns>
-    public Transform extract()
-    {
-        // Swap the root with the last time.
-        BinaryNode temp = heap[heap.Count - 1];
-        heap[heap.Count - 1] = heap[0];
-        heap[0] = temp;
-
-        // Remove the last item from the heap.
-        Transform result = heap[heap.Count - 1].getNode();
-        heap.RemoveAt(heap.Count - 1);
-
-        // Hepify the heap.
-        this.heapify(0);
-
-        // Return the smallest node.
-        return result;
-    }
-
-    /// <summary>
-    /// Check if heap is empty.
-    /// </summary>
-    /// <returns>boolean</returns>
-    public bool isEmpty()
-    {
-        return heap.Count == 0;
-    }
-
-    /// <summary>
-    /// Bubble up the smallest weighted node.
-    /// </summary>
-    /// <param name="index">the index of the node to bubble up.</param>
-    private void bubbleUp(int index)
-    {
-
-        if (index <= 0)
-        {
-            return;
         }
 
-        int position = index % 2;
-
-        int parent;
-        // We know that current position is on the right
-        if (position == 0)
+        public MinHeap(IComparer<T> comparer)
+            : this(InitialCapacity, comparer)
         {
-            parent = Mathf.FloorToInt((index / 2) - 1);
         }
 
-        // We know the current position is on the left
-        else
+        public MinHeap(int capacity, IComparer<T> comparer)
         {
-            parent = Mathf.FloorToInt((index / 2));
+            _arr = new T[capacity];
+            _lastItemIndex = -1;
+            _comparer = comparer;
         }
 
-        // We swap the position if the parent is bigger than the child.
-        BinaryNode parentNode = heap[parent];
-        BinaryNode node = heap[index];
-        if (parentNode.getWeight() > node.getWeight())
+        public int Count
         {
-            BinaryNode temp = heap[index];
-            heap[index] = parentNode;
-            heap[parent] = temp;
-
-            this.bubbleUp(parent); // Continue bubble up if it's not the root node.
-
+            get
+            {
+                return _lastItemIndex + 1;
+            }
         }
 
-    }
-
-    /// <summary>
-    /// Heapify the heap
-    /// </summary>
-    /// <param name="index">Heapify from the index position of the node.</param>
-    private void heapify(int index)
-    {
-
-        // Calculate the position for left and right node.
-        int leftIndex = (2 * index) + 1;
-        int rightIndex = (2 * index) + 2;
-        int smallest = index;
-
-        // Check if left child or right child has the smallest value.
-        if (leftIndex <= heap.Count - 1 && heap[leftIndex].getWeight() <= heap[smallest].getWeight())
+        public void Add(T item)
         {
-            smallest = leftIndex;
+            if (_lastItemIndex == _arr.Length - 1)
+            {
+                Resize();
+            }
+
+            _lastItemIndex++;
+            _arr[_lastItemIndex] = item;
+
+            MinHeapifyUp(_lastItemIndex);
         }
 
-        if (rightIndex <= heap.Count - 1 && heap[rightIndex].getWeight() <= heap[smallest].getWeight())
+        public T Remove()
         {
-            smallest = rightIndex;
+            if (_lastItemIndex == -1)
+            {
+                throw new InvalidOperationException("The heap is empty");
+            }
+
+            T removedItem = _arr[0];
+            _arr[0] = _arr[_lastItemIndex];
+            _lastItemIndex--;
+
+            MinHeapifyDown(0);
+
+            return removedItem;
         }
 
-        // If there is a smallest child, swap and heapify again.
-        if (smallest != index)
+        public T Peek()
         {
-            BinaryNode temp = heap[index];
-            heap[index] = heap[smallest];
-            heap[smallest] = temp;
+            if (_lastItemIndex == -1)
+            {
+                throw new InvalidOperationException("The heap is empty");
+            }
 
-            this.heapify(smallest);
+            return _arr[0];
         }
-    }
 
-    public void displayHeap()
-    {
-        print("==================================");
-        int counter = 0;
-        foreach (BinaryNode bNode in heap)
+        public void Clear()
         {
-            print("index " + counter + " : " + bNode.getNode().name + " (Weight: " + bNode.getWeight() + ")");
-            counter++;
+            _lastItemIndex = -1;
         }
-        print("==================================");
-    }
 
-    public Transform root()
-    {
-        Transform result = heap[0].getNode();
-        return result;
+        private void MinHeapifyUp(int index)
+        {
+            if (index == 0)
+            {
+                return;
+            }
+
+            int childIndex = index;
+            int parentIndex = (index - 1) / 2;
+
+            if (_comparer.Compare(_arr[childIndex], _arr[parentIndex]) < 0)
+            {
+                // swap the parent and the child
+                T temp = _arr[childIndex];
+                _arr[childIndex] = _arr[parentIndex];
+                _arr[parentIndex] = temp;
+
+                MinHeapifyUp(parentIndex);
+            }
+        }
+
+        private void MinHeapifyDown(int index)
+        {
+            int leftChildIndex = index * 2 + 1;
+            int rightChildIndex = index * 2 + 2;
+            int smallestItemIndex = index; // The index of the parent
+
+            if (leftChildIndex <= _lastItemIndex &&
+                _comparer.Compare(_arr[leftChildIndex], _arr[smallestItemIndex]) < 0)
+            {
+                smallestItemIndex = leftChildIndex;
+            }
+
+            if (rightChildIndex <= _lastItemIndex &&
+                _comparer.Compare(_arr[rightChildIndex], _arr[smallestItemIndex]) < 0)
+            {
+                smallestItemIndex = rightChildIndex;
+            }
+
+            if (smallestItemIndex != index)
+            {
+                // swap the parent with the smallest of the child items
+                T temp = _arr[index];
+                _arr[index] = _arr[smallestItemIndex];
+                _arr[smallestItemIndex] = temp;
+
+                MinHeapifyDown(smallestItemIndex);
+            }
+        }
+
+        private void Resize()
+        {
+            T[] newArr = new T[_arr.Length * 2];
+            for (int i = 0; i < _arr.Length; i++)
+            {
+                newArr[i] = _arr[i];
+            }
+
+            _arr = newArr;
+        }
     }
 }
