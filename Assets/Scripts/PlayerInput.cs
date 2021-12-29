@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 public class PlayerInput : MonoBehaviour {
 
@@ -193,12 +195,14 @@ public class PlayerInput : MonoBehaviour {
             clearPreviousPath();
             // Execute Shortest Path.
             PathFindingBfs.TileGrid bfsFinder = gameObject.GetComponent<PathFindingBfs.TileGrid>();
-            PathFindingBfs.Tile tile = new PathFindingBfs.Tile();
+           PathFindingBfs.Tile tile;
            
             // PathFindingBfs.TileGrid tg = new PathFindingBfs.TileGrid();
            // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
-            int start = (int)((Mathf.Abs(startNode.position.x*bfsFinder.Rows)) + Mathf.Abs(startNode.position.y));
-            int end = (int)((Mathf.Abs(endNode.position.x*bfsFinder.Cols)) + Mathf.Abs(endNode.position.y));
+            int start = (int)((Mathf.Abs(startNode.position.x*25)) + Mathf.Abs(startNode.position.y)); // converted to node number
+            int end = (int)((Mathf.Abs(endNode.position.x*25)) + Mathf.Abs(endNode.position.y));
+            Debug.Log(start);
+            Debug.Log(end);
             List <PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
             //tg.GetTile(start, end);
             
@@ -207,8 +211,8 @@ public class PlayerInput : MonoBehaviour {
             Debug.Log("bfsPath no of nodes " + bfsPath.Count);
             for (int i=0; i<bfsPath.Count; i++)
             {
-                currentPath[i].position.x = ((int)(bfsPath[i])) % bfsFinder.Rows;
-                currentPath[i].position.y = -((bfsPath[i]/bfsFinder.Rows)+1);
+                // 
+                currentPath[i].position = new Vector3(((int)(bfsPath[i]).ToVector2().x) % bfsFinder.Rows, -((bfsPath[i].ToVector2().y/bfsFinder.Rows)+1), currentPath[i].position.z);
                 
             }
              foreach (Transform path in currentPath)

@@ -11,8 +11,8 @@ namespace PathFindingBfs
         private const int TileWeight_Expensive = 50;
         private const int TileWeight_Infinity = int.MaxValue;
 
-        public int Rows;
-        public int Cols;
+        public int Rows =25;
+        public int Cols = 25;
     
         public Tile start;
         public Tile end;
@@ -31,26 +31,26 @@ namespace PathFindingBfs
 
         public IEnumerator _pathRoutine;
 
-        private void Awake()
-        {
-            Tiles = new Tile[Rows * Cols];
-            for (int r = 0; r < Rows; r++)
-            {
-                for (int c = 0; c < Cols; c++)
-                {
-                    Tile tile = new Tile(this, r, c, TileWeight_Default);
-                    tile.InitGameObject(transform, TilePrefab);
+//private void Awake()
+        // {
+            // Tiles = new Tile[Rows * Cols];
+            // for (int r = 0; r < Rows; r++)
+            // {
+            //     for (int c = 0; c < Cols; c++)
+            //     {
+            //         Tile tile = new Tile(this, r, c, TileWeight_Default);
+            //         tile.InitGameObject(transform, TilePrefab);
 
-                    int index = GetTileIndex(r, c);
-                    Tiles[index] = tile;
-                }
-            }
+            //         int index = GetTileIndex(r, c);
+            //         Tiles[index] = tile;
+            //     }
+            // }
 
 
-            CreateExpensiveArea(3, 3, 9, 1, TileWeight_Expensive);
-            CreateExpensiveArea(3, 11, 1, 9, TileWeight_Expensive);
-            ResetGrid();
-        }
+            // CreateExpensiveArea(3, 3, 9, 1, TileWeight_Expensive);
+            // CreateExpensiveArea(3, 11, 1, 9, TileWeight_Expensive);
+            // ResetGrid();
+        // }
 
         public void Update()
         {
@@ -82,12 +82,36 @@ namespace PathFindingBfs
 
         public List<Tile> SendStartGoal(int startNode, int endNode)
         {
+
+            Tiles = new Tile[Rows * Cols];
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Cols; c++)
+                {
+                    Tile tile = new Tile(this, r, c, TileWeight_Default);
+                    tile.InitGameObject(transform, TilePrefab);
+
+                    int index = GetTileIndex(r, c);
+                    Tiles[index] = tile;
+                }
+            }
+
+
+            CreateExpensiveArea(3, 3, 9, 1, TileWeight_Expensive);
+            CreateExpensiveArea(3, 11, 1, 9, TileWeight_Expensive);
+            ResetGrid();
             Tile start = Tiles[startNode];
             Tile end = Tiles[endNode];
+            List<IVisualStep> outSteps=new List<IVisualStep>();
+
             //if (Input.GetKeydown("space")){
-             StopPathCoroutine();
-            _pathRoutine = FindPath(start, end, PathFinder.FindPath_BFS);
-            StartCoroutine(_pathRoutine);
+            //  StopPathCoroutine();
+            List<PathFindingBfs.Tile> bfspathnodes;
+            
+            bfspathnodes = PathFindingBfs.PathFinder.FindPath_BFS(this, start, end, outSteps);
+            return bfspathnodes;
+            
+            // StartCoroutine(_pathRoutine);
             
 
             
