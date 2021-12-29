@@ -195,12 +195,12 @@ public class PlayerInput : MonoBehaviour {
             clearPreviousPath();
             // Execute Shortest Path.
             PathFindingBfs.TileGrid bfsFinder = gameObject.GetComponent<PathFindingBfs.TileGrid>();
-           PathFindingBfs.Tile tile;
+            // PathFindingBfs.Tile tile;
            
             // PathFindingBfs.TileGrid tg = new PathFindingBfs.TileGrid();
-           // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
-            int start = (int)((Mathf.Abs(startNode.position.x*25)) + Mathf.Abs(startNode.position.y)); // converted to node number
-            int end = (int)((Mathf.Abs(endNode.position.x*25)) + Mathf.Abs(endNode.position.y));
+            // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
+            int start = startNode.GetComponent<DijkstraNode>().iGridX*25 + startNode.GetComponent<DijkstraNode>().iGridY; // converted to node number
+            int end = endNode.GetComponent<DijkstraNode>().iGridX*25 + endNode.GetComponent<DijkstraNode>().iGridY;
             Debug.Log(start);
             Debug.Log(end);
             List <PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
