@@ -29,7 +29,7 @@ namespace PathFindingBfs
             _gameObject = GameObject.Instantiate(prefab);
             _gameObject.name = $"Tile({Row}, {Col})";
             _gameObject.transform.parent = parent;
-            _gameObject.transform.localPosition = new Vector3(Col, -Row, 0.0f);
+            _gameObject.transform.localPosition = new Vector3(Col, 0.0f, Row);
             _gameObject.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
             _spriteRenderer = _gameObject.GetComponent<SpriteRenderer>();
             _textComponent = _gameObject.GetComponentInChildren<Text>();

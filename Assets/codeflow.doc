@@ -1,0 +1,13 @@
+Dijkstra
+
+GenerateGrid.cs {depends on DijkstraNode.cs} [GameObject GridGenerator] - generates the Grid with nodes and the neighbouring nodes
+ShortestPath.cs [attached to GameObject controller]- takes in start and end node (Transform or positions) from PlayerScript and returns the grid positions to PlayerScript.cs
+nodes- GameObject taggged as Node
+DijkstraNode.cs - generic class with function prototypes defined 
+
+PlayerScript -> ShortestPath -> DijkstraNode
+GenerateGrid [common for all]
+
+BFS
+
+TileGrid.cs [GameObject controller] - 

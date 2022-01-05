@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DijkstraNode : MonoBehaviour {
+public class DijkstraNode : MonoBehaviour
+{
 
     public int iGridX;//X Position in the Node Array
     public int iGridY;//Y Position in the Node Array
@@ -11,15 +12,26 @@ public class DijkstraNode : MonoBehaviour {
     [SerializeField] private List<Transform> neighbourNode;
     [SerializeField] private List<DijkstraNode> dNeighbourNode;
     [SerializeField] private bool walkable = true;
-    
+
     public int igCost;//The cost of moving to the next square.
     public int ihCost;//The distance to the goal from this node.
+
+    #region variables used by BFS DFS class
+    public int G = 0;
+    public int H = 0;
+    public int F = 0;
+
+    public bool Visited = false;
+    public bool Path = false;
+
+    #endregion
 
     public int FCost { get { return igCost + ihCost; } }//Quick get function to add G cost and H Cost, and since we'll never need to edit FCost, we dont need a set function.
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         this.resetNode();
     }
 
@@ -83,7 +95,8 @@ public class DijkstraNode : MonoBehaviour {
         return result;
     }
 
-    public List<DijkstraNode> getDNeighbourNode() {
+    public List<DijkstraNode> getDNeighbourNode()
+    {
         List<DijkstraNode> result = this.dNeighbourNode;
         return result;
     }

@@ -29,7 +29,8 @@ namespace PathFindingBfs
 
         public Tile[] Tiles { get; private set; }
 
-        public IEnumerator _pathRoutine;
+       public IEnumerator _pathRoutine;
+    // public _pathRoutine;
 
 //private void Awake()
         // {
@@ -82,6 +83,34 @@ namespace PathFindingBfs
 
         public List<Tile> SendStartGoal(int startNode, int endNode)
         {
+            startTime = Time.realtimeSinceStartup;
+
+            nodes = GameObject.FindGameObjectsWithTag("Node");
+
+            List<Transform> result = new List<Transform>();
+            Transform node = DijkstrasAlgo(start, end);
+        #region Dijkstrareturningresult node
+              while (node != null)
+        {
+            result.Add(node);
+            DijkstraNode currentNode = node.GetComponent<DijkstraNode>();
+            node = currentNode.getParentNode();
+        }
+
+        result.Reverse();
+
+        float totalCost = 0;
+        // Reverse the list so that it will be from start to end.
+        foreach(Transform nd in result) {
+            totalCost += nd.GetComponent<DijkstraNode>().getWeight();
+        }
+        // totalCost *= 0.001f;
+        updateTimer = false;
+        writeToCsv.WriteCSV("Dijkstra", endTime, totalCost, result.Count);
+        return result;
+        }
+        #endregion
+        
 
             Tiles = new Tile[Rows * Cols];
             for (int r = 0; r < Rows; r++)
@@ -164,7 +193,8 @@ namespace PathFindingBfs
             }
         }
 
-        public IEnumerator FindPath(Tile start, Tile end, Func<TileGrid, Tile, Tile, List<IVisualStep>, List<Tile>> pathFindingFunc)
+        // public IEnumerator FindPath(Tile start, Tile end, Func<TileGrid, Tile, Tile, List<IVisualStep>, List<Tile>> pathFindingFunc)
+         public IEnumerator FindPath(Tile start, Tile end, Func<TileGrid, Tile, Tile, List<IVisualStep>, List<Tile>> pathFindingFunc)
         {
             ResetGrid();
 

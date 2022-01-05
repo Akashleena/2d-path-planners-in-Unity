@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 
-public class PlayerInput : MonoBehaviour {
+public class PlayerInput : MonoBehaviour
+{
 
     private Transform node;
     private Transform startNode;
@@ -14,11 +15,19 @@ public class PlayerInput : MonoBehaviour {
     private List<Transform> blockPath = new List<Transform>();
     private List<Transform> currentPath = new List<Transform>();
 
-	// Update is called once per frame
-	void Update () {
+    private Vector3 finalbfsPath;
+
+    // Update is called once per frame
+    void Update()
+    {
         mouseInput();
     }
-    
+
+    void Start()
+    {
+        Debug.Log("Test");
+    }
+
     /// <summary>
     /// Mouse click.
     /// </summary>
@@ -130,13 +139,13 @@ public class PlayerInput : MonoBehaviour {
     /// Button for find path.
     /// </summary>
     public void btnFindAStarPath()
-    {   
+    {
         // Only find if there are start and end node.
         if (startNode != null && endNode != null)
         {
             // Execute Shortest Path.
             ShortestPath finder = gameObject.GetComponent<ShortestPath>();
-            
+
 
             // List<Transform> paths = finder.findShortestPath(startNode, endNode);
 
@@ -158,7 +167,8 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
-    public void btnFindDijkstraPath() {
+    public void btnFindDijkstraPath()
+    {
         if (startNode != null && endNode != null)
         {
             clearPreviousPath();
@@ -175,59 +185,66 @@ public class PlayerInput : MonoBehaviour {
         }
     }
 
-     public void btnFindTrrtPath()
-    {   
+    public void btnFindTrrtPath()
+    {
         // Only find if there are start and end node.
         if (startNode != null && endNode != null)
         {
-           
+
             clearPreviousPath();
             TrrtComscene trrtPath = gameObject.GetComponent<TrrtComscene>();
             trrtPath.BeginSolving(10, startNode, endNode);
             trrtPath.ContinueSolving();
-          
+
         }
     }
 
-    public void btnFindBFSPath() {
+
+    public void btnFindBFSPath()
+    {
         if (startNode != null && endNode != null)
         {
             clearPreviousPath();
             // Execute Shortest Path.
             PathFindingBfs.TileGrid bfsFinder = gameObject.GetComponent<PathFindingBfs.TileGrid>();
             // PathFindingBfs.Tile tile;
-           
+
             // PathFindingBfs.TileGrid tg = new PathFindingBfs.TileGrid();
             // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
-            int start = startNode.GetComponent<DijkstraNode>().iGridX*25 + startNode.GetComponent<DijkstraNode>().iGridY; // converted to node number
-            int end = endNode.GetComponent<DijkstraNode>().iGridX*25 + endNode.GetComponent<DijkstraNode>().iGridY;
+            int start = startNode.GetComponent<DijkstraNode>().iGridX * 25 + startNode.GetComponent<DijkstraNode>().iGridY; // convert co-ordinate  to node number
+            int end = endNode.GetComponent<DijkstraNode>().iGridX * 25 + endNode.GetComponent<DijkstraNode>().iGridY;
             Debug.Log(start);
             Debug.Log(end);
-            List <PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
+            List<PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
             //tg.GetTile(start, end);
-            
+
             // List<Tile> bfsPath = bfsFinder.FindPath(tg.start, tg.end, pf.FindPath_BFS);
 
             Debug.Log("bfsPath no of nodes " + bfsPath.Count);
-            for (int i=0; i<bfsPath.Count; i++)
+            for (int i = 0; i < bfsPath.Count; i++)
             {
-                // 
-                currentPath[i].position = new Vector3(((int)(bfsPath[i]).ToVector2().x) % bfsFinder.Rows, -((bfsPath[i].ToVector2().y/bfsFinder.Rows)+1), currentPath[i].position.z);
-                
+                //converts node numbers to co-ordinates
+                finalbfsPath = bfsPath[i].transform.position;
+                Debug.Log(finalbfsPath);
+                // currentPath[i].position = new Vector3(((int)(bfsPath[i]).ToVector2().x) % bfsFinder.Rows, -((bfsPath[i].ToVector2().y / bfsFinder.Rows) + 1), currentPath[i].position.z);
+                // Debug.Log(currentPath[i].position);
+
             }
-             foreach (Transform path in currentPath)
+            foreach (Transform path in finalbfsPath)
             {
                 Renderer rend = path.GetComponent<Renderer>();
                 rend.material.color = Color.red;
-            } 
+            }
         }
     }
 
     /// <summary>
     /// Resets the previous generated path, if any.
     /// </summary>
-    public void clearPreviousPath() {
-        if(currentPath.Count > 0) {
+    public void clearPreviousPath()
+    {
+        if (currentPath.Count > 0)
+        {
             foreach (Transform path in currentPath)
             {
                 Renderer rend = path.GetComponent<Renderer>();
@@ -275,7 +292,7 @@ public class PlayerInput : MonoBehaviour {
         UnitSelectionComponent selection = gameObject.GetComponent<UnitSelectionComponent>();
         List<Transform> selected = selection.getSelectedObjects();
 
-        foreach(Transform nd in selected)
+        foreach (Transform nd in selected)
         {
             // Render the selected node to black.
             Renderer rend = nd.GetComponent<Renderer>();
@@ -350,10 +367,10 @@ public class PlayerInput : MonoBehaviour {
     /// Clear all the block path.
     /// </summary>
     public void btnClearBlock()
-    {   
+    {
         // For each blocked path in the list
-        foreach(Transform path in blockPath)
-        {   
+        foreach (Transform path in blockPath)
+        {
             // Set walkable to true.
             DijkstraNode n = path.GetComponent<DijkstraNode>();
             n.setWalkable(true);
@@ -381,7 +398,7 @@ public class PlayerInput : MonoBehaviour {
     /// </summary>
     private void colorBlockPath()
     {
-        foreach(Transform block in blockPath)
+        foreach (Transform block in blockPath)
         {
             Renderer rend = block.GetComponent<Renderer>();
             rend.material.color = Color.black;
