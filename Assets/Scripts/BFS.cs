@@ -8,7 +8,7 @@ public class BFS
     private List<BfsDfsNode> _order = new List<BfsDfsNode>();
     private Queue<BfsDfsNode> _queue = new Queue<BfsDfsNode>();
 
-    public bool Find(BfsDfsNode _start)
+     public List<Transform> Find(BfsDfsNode _start)
     {
         _start.Visited = true;
         _order.Add(_start);

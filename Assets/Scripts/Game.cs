@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
     private List<BfsDfsNode> _path = new List<BfsDfsNode>();
     private BfsDfsNode _start;
     private BfsDfsNode _goal;
+    public Transform startNode;
+    public Transform endNode;
 
     private bool _loading = true;
     private bool _canDestroy = false;
@@ -34,13 +36,10 @@ public class Game : MonoBehaviour
         List<Transform> result = new List<Transform>();
 
         Transform node = (start, end);
-
-        LoadMap(method);
-
-    }
-    public void LoadMap(int method)
-    {
-
+       int  _method = method;
+        startNode = start;
+        endNode = end;
+   
         foreach (GameObject obj in nodes)
         {
             DijkstraNode n = obj.GetComponent<DijkstraNode>();
@@ -56,32 +55,8 @@ public class Game : MonoBehaviour
         n.F = 0;
         n.Path = false;
 
-        Find(method);
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    public void Find(int _method = 0)
-    {
         bool _found = false;
-        List<Transform> unexplored = new List<Transform>();
-
-        // We add all the nodes we found into unexplored.
-        foreach (GameObject obj in nodes)
-        {
-            DijkstraNode n = obj.GetComponent<DijkstraNode>();
-            if (n.isWalkable())
-            {
-                n.resetNode();
-                unexplored.Add(obj.transform);
-            }
-        }
-        DijkstraNode startNode = start.GetComponent<DijkstraNode>();
+  
         switch (_method)
         {
             case 0: //DFS
@@ -124,7 +99,7 @@ public class Game : MonoBehaviour
                 Debug.Log("Search: Path Could not be found!");
             }
         }
-    }
+    
 
     //Triggers the Search
 

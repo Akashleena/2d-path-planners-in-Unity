@@ -202,41 +202,85 @@ public class PlayerInput : MonoBehaviour
 
     public void btnFindBFSPath()
     {
+
+
+        
         if (startNode != null && endNode != null)
         {
             clearPreviousPath();
-            // Execute Shortest Path.
-            PathFindingBfs.TileGrid bfsFinder = gameObject.GetComponent<PathFindingBfs.TileGrid>();
-            // PathFindingBfs.Tile tile;
 
-            // PathFindingBfs.TileGrid tg = new PathFindingBfs.TileGrid();
-            // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
-            int start = startNode.GetComponent<DijkstraNode>().iGridX * 25 + startNode.GetComponent<DijkstraNode>().iGridY; // convert co-ordinate  to node number
-            int end = endNode.GetComponent<DijkstraNode>().iGridX * 25 + endNode.GetComponent<DijkstraNode>().iGridY;
-            Debug.Log(start);
-            Debug.Log(end);
-            List<PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
-            //tg.GetTile(start, end);
+            Game bfs = gameObject.GetComponent<Game>();
+            currentPath = bfs.FindBFSPath(startNode, endNode, 1);
 
-            // List<Tile> bfsPath = bfsFinder.FindPath(tg.start, tg.end, pf.FindPath_BFS);
-
-            Debug.Log("bfsPath no of nodes " + bfsPath.Count);
-            for (int i = 0; i < bfsPath.Count; i++)
-            {
-                //converts node numbers to co-ordinates
-                finalbfsPath = bfsPath[i].transform.position;
-                Debug.Log(finalbfsPath);
-                // currentPath[i].position = new Vector3(((int)(bfsPath[i]).ToVector2().x) % bfsFinder.Rows, -((bfsPath[i].ToVector2().y / bfsFinder.Rows) + 1), currentPath[i].position.z);
-                // Debug.Log(currentPath[i].position);
-
-            }
-            foreach (Transform path in finalbfsPath)
+            // Colour the node red.
+            foreach (Transform path in currentPath)
             {
                 Renderer rend = path.GetComponent<Renderer>();
                 rend.material.color = Color.red;
             }
         }
+    
     }
+
+     public void btnFindDFSPath()
+    {
+
+
+        
+        if (startNode != null && endNode != null)
+        {
+            clearPreviousPath();
+
+            Game dfs = gameObject.GetComponent<Game>();
+            currentPath = dfs.FindBFSPath(startNode, endNode, 0);
+
+            // Colour the node red.
+            foreach (Transform path in currentPath)
+            {
+                Renderer rend = path.GetComponent<Renderer>();
+                rend.material.color = Color.red;
+            }
+        }
+    
+    }
+    
+
+
+
+        
+
+
+        //     // Execute Shortest Path.
+        //     PathFindingBfs.TileGrid bfsFinder = gameObject.GetComponent<PathFindingBfs.TileGrid>();
+        //     // PathFindingBfs.Tile tile;
+
+        //     // PathFindingBfs.TileGrid tg = new PathFindingBfs.TileGrid();
+        //     // PathFindingBfs.PathFinder pf = new PathFindingBfs.PathFinder();
+        //     int start = startNode.GetComponent<DijkstraNode>().iGridX * 25 + startNode.GetComponent<DijkstraNode>().iGridY; // convert co-ordinate  to node number
+        //     int end = endNode.GetComponent<DijkstraNode>().iGridX * 25 + endNode.GetComponent<DijkstraNode>().iGridY;
+        //     Debug.Log(start);
+        //     Debug.Log(end);
+        //     List<PathFindingBfs.Tile> bfsPath = bfsFinder.SendStartGoal(start, end);
+        //     //tg.GetTile(start, end);
+
+        //     // List<Tile> bfsPath = bfsFinder.FindPath(tg.start, tg.end, pf.FindPath_BFS);
+
+        //     Debug.Log("bfsPath no of nodes " + bfsPath.Count);
+        //     for (int i = 0; i < bfsPath.Count; i++)
+        //     {
+        //         //converts node numbers to co-ordinates
+        //         finalbfsPath = bfsPath[i].transform.position;
+        //         Debug.Log(finalbfsPath);
+        //         // currentPath[i].position = new Vector3(((int)(bfsPath[i]).ToVector2().x) % bfsFinder.Rows, -((bfsPath[i].ToVector2().y / bfsFinder.Rows) + 1), currentPath[i].position.z);
+        //         // Debug.Log(currentPath[i].position);
+
+        //     }
+        //     foreach (Transform path in finalbfsPath)
+        //     {
+        //         Renderer rend = path.GetComponent<Renderer>();
+        //         rend.material.color = Color.red;
+        //     }
+   
 
     /// <summary>
     /// Resets the previous generated path, if any.
