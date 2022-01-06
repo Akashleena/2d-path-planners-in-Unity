@@ -52,13 +52,16 @@ public class BFS
             }
             for (int i = 0; i < t.adjacent.Count; i++)
             {
-                if (t.adjacent[i].IsValid() && (t.isWalkable()))
+                if (t.adjacent[i].IsValid())
                 {
                     t.adjacent[i].parent = t;
                     t.adjacent[i].Visited = true;
                     //how do i store the transform of the adjacent node in order and enqueue ?
-                    _order.Add(t.adjacent[i].transform);
-                    _queue.Enqueue(t.adjacent[i].transform);
+                    if ((t.isWalkable()))
+                    {
+                        _order.Add(t.adjacent[i].transform);
+                        _queue.Enqueue(t.adjacent[i].transform);
+                    }
                 }
             }
 

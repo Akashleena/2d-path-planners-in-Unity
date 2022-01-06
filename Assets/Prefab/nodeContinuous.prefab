@@ -116,6 +116,13 @@ MonoBehaviour:
   walkable: 1
   igCost: 0
   ihCost: 0
+  G: 0
+  H: 0
+  F: 0
+  Visited: 0
+  Path: 0
+  adjacent: []
+  parent: {fileID: 0}
 --- !u!114 &114198570807290770
 MonoBehaviour:
   m_ObjectHideFlags: 0

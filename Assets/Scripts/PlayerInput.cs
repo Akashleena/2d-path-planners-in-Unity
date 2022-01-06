@@ -211,7 +211,7 @@ public class PlayerInput : MonoBehaviour
 
             Game bfs = gameObject.GetComponent<Game>();
             currentPath = bfs.findBFSPath(startNode, endNode, 1);
-
+            Debug.Log(currentPath.Count);
             // Colour the node red.
             foreach (Transform path in currentPath)
             {
@@ -222,27 +222,27 @@ public class PlayerInput : MonoBehaviour
 
     }
 
-    //  public void btnFindDFSPath()
-    // {
+    public void btnFindDFSPath()
+    {
 
 
 
-    //     if (startNode != null && endNode != null)
-    //     {
-    //         clearPreviousPath();
+        if (startNode != null && endNode != null)
+        {
+            clearPreviousPath();
 
-    //         Game dfs = gameObject.GetComponent<Game>();
-    //         currentPath = dfs.FindBFSPath(startNode, endNode, 0);
+            Game dfs = gameObject.GetComponent<Game>();
+            currentPath = dfs.findBFSPath(startNode, endNode, 0);
 
-    //         // Colour the node red.
-    //         foreach (Transform path in currentPath)
-    //         {
-    //             Renderer rend = path.GetComponent<Renderer>();
-    //             rend.material.color = Color.red;
-    //         }
-    //     }
+            // Colour the node red.
+            foreach (Transform path in currentPath)
+            {
+                Renderer rend = path.GetComponent<Renderer>();
+                rend.material.color = Color.red;
+            }
+        }
 
-    // }
+    }
 
 
 

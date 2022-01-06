@@ -6,8 +6,8 @@ public class Game : MonoBehaviour
 {
 
     public string methodName = "";
-    public int sx = 25;
-    public int sz = 25;
+    // public int sx = 25;
+    // public int sz = 25;
 
     private float endTime;
     private float startTime;
@@ -93,7 +93,7 @@ public class Game : MonoBehaviour
         switch (_method)
         {
             case 0: //DFS
-                result = depth.Find(startNode, endNode);
+                result = depth.FindDfs(startNode, endNode);
                 methodName = "DFS";
                 //  _path = depth.GetPath();
                 break;
@@ -140,7 +140,7 @@ public class Game : MonoBehaviour
 
         print("Path completed!");
         //Triggers the Search
-        writeToCsv.WriteCSV(methodName, endTime, totalCost, result.Count);
+        //  writeToCsv.WriteCSV(methodName, endTime, totalCost, result.Count);
 
         return result;
 

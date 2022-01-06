@@ -25,33 +25,55 @@ using System.Collections.Generic;
 
 public class DFS
 {
-    private List<BfsDfsNode> _path = new List<BfsDfsNode>();
-    private List<BfsDfsNode> _order = new List<BfsDfsNode>();
+
+
+    private List<DijkstraNode> _path = new List<DijkstraNode>();
+
+    // private List<BfsDfsNode> _order = new List<BfsDfsNode>();
+
+    private List<Transform> _order = new List<Transform>();
+    //private Queue<BfsDfsNode> _queue = new Queue<BfsDfsNode>();
+    private Queue<Transform> _queue = new Queue<Transform>();
+    //public List<BfsDfsNode> result = new List<BfsDfsNode>();
 
     public List<Transform> result = new List<Transform>();
+    //private List<BfsDfsNode> _path = new List<BfsDfsNode>();
+    //private List<BfsDfsNode> _order = new List<BfsDfsNode>();
 
-    public bool Find(BfsDfsNode _start)
+    //public List<Transform> result = new List<Transform>();
+
+    public bool Find(Transform _start, Transform end)
     {
-        _start.Visited = true;
+        DijkstraNode currentNode = _start.gameObject.GetComponent<DijkstraNode>();
+
+
+        currentNode.Visited = true;
+
         _order.Add(_start);
 
-        if (_start.Status == BfsDfsNode.END)
+        if (_start.position == end.position && (currentNode.isWalkable()))
         {
-            _path.Add(_start);
-            _start.Path = true;
-            //return result;
+            _path.Add(currentNode);
+            result.Add(_start);
+            //currentNode.Path = true;
+            return true;
         }
         else
         {
-            for (int i = 0; i < _start.adjacent.Count; i++)
+            DijkstraNode t = _start.gameObject.GetComponent<DijkstraNode>();
+            for (int i = 0; i < t.adjacent.Count; i++)
             {
-                if (_start.adjacent[i].IsValid())
+                if (t.adjacent[i].IsValid())
                 {
-                    if (Find(_start.adjacent[i]))
+                    if (t.isWalkable())
                     {
-                        _path.Insert(0, _start);
-                        _start.Path = true;
-                        return true;
+                        if (Find(t.adjacent[i].transform, end))
+                        {
+                            _path.Insert(0, t);
+                            result.Insert(0, _start);
+                            // _start.Path = true;
+                            return true;
+                        }
                     }
                 }
             }
@@ -59,7 +81,12 @@ public class DFS
 
         return false;
     }
+    public List<Transform> FindDfs(Transform _start, Transform _end)
+    {
+        Find(_start, _end);
+        return result;
+    }
 
-    public List<BfsDfsNode> GetPath() { return _path; }
-    public List<BfsDfsNode> GetOrder() { return _order; }
+    // public List<BfsDfsNode> GetPath() { return _path; }
+    // public List<BfsDfsNode> GetOrder() { return _order; }
 }
