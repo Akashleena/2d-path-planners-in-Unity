@@ -25,14 +25,17 @@ public class Game : MonoBehaviour
     private bool _canDestroy = false;
     WriteToCSVFile writeToCsv;
     public GameObject csvObject;
+    public GameObject gridGenerator;
     private DFS depth = new DFS();
     private BFS breadth = new BFS();
 
-    private GenerateGrid gridDj = new GenerateGrid();
+    private GenerateGrid gridDj;
     // Use this for initialization
     private void Awake()//When the program starts
     {
         writeToCsv = csvObject.GetComponent<WriteToCSVFile>();
+        //use the same GenerateGrid instance as that of Unity Scene, instead of creating a new Object
+        gridDj = gridGenerator.GetComponent<GenerateGrid>();
 
     }
 
@@ -70,15 +73,18 @@ public class Game : MonoBehaviour
         {
             for (int z = 0; z < gridDj.column; z++)
             {
-                DijkstraNode n = gridDj.grid[x, z].GetComponent("DijkstraNode") as DijkstraNode;
-                if ((x - 1) >= 0 && (z + 1) < sz) n.adjacent.Add(gridDj.grid[x - 1, z + 1].GetComponent("DijkstraNode") as DijkstraNode);    //1
-                if ((z + 1) < sz) n.adjacent.Add(gridDj.grid[x, z + 1].GetComponent("DijkstraNode") as DijkstraNode);                        //2
-                if ((x + 1) < sx && (z + 1) < sz) n.adjacent.Add(gridDj.grid[x + 1, z + 1].GetComponent("DijkstraNode") as DijkstraNode);    //3
-                if ((x - 1) >= 0) n.adjacent.Add(gridDj.grid[x - 1, z].GetComponent("DijkstraNode") as DijkstraNode);                        //4
-                if ((x + 1) < sx) n.adjacent.Add(gridDj.grid[x + 1, z].GetComponent("DijkstraNode") as DijkstraNode);                        //5
-                if ((x - 1) >= 0 && (z - 1) >= 0) n.adjacent.Add(gridDj.grid[x - 1, z - 1].GetComponent("DijkstraNode") as DijkstraNode);    //6
-                if ((z - 1) >= 0) n.adjacent.Add(gridDj.grid[x, z - 1].GetComponent("DijkstraNode") as DijkstraNode);                        //7
-                if ((x + 1) < sx && (z - 1) >= 0) n.adjacent.Add(gridDj.grid[x + 1, z - 1].GetComponent("DijkstraNode") as DijkstraNode);    //8
+                //Use the formula Given to convert row and column to 1D index
+                //https://stackoverflow.com/questions/1730961/convert-a-2d-array-index-into-a-1d-index
+                DijkstraNode n = gridDj.grid[(x * gridDj.column) + z].GetComponent<DijkstraNode>();
+                //use gridDj.row instead of sx and gridDj.column instead of sz
+                if ((x - 1) >= 0 && (z + 1) < gridDj.column) n.adjacent.Add(gridDj.grid[((x - 1) * gridDj.column) + (z + 1)].GetComponent<DijkstraNode>());    //1
+                if ((z + 1) < gridDj.column) n.adjacent.Add(gridDj.grid[(x * gridDj.column) + (z + 1)].GetComponent("DijkstraNode") as DijkstraNode);                        //2
+                if ((x + 1) < gridDj.row && (z + 1) < gridDj.column) n.adjacent.Add(gridDj.grid[((x + 1) * gridDj.column) + (z + 1)].GetComponent<DijkstraNode>());    //3
+                if ((x - 1) >= 0) n.adjacent.Add(gridDj.grid[((x - 1) * gridDj.column) + z].GetComponent<DijkstraNode>());                        //4
+                if ((x + 1) < gridDj.row) n.adjacent.Add(gridDj.grid[((x + 1) * gridDj.column) + z].GetComponent<DijkstraNode>());                        //5
+                if ((x - 1) >= 0 && (z - 1) >= 0) n.adjacent.Add(gridDj.grid[((x - 1) * gridDj.column) + (z - 1)].GetComponent<DijkstraNode>());    //6
+                if ((z - 1) >= 0) n.adjacent.Add(gridDj.grid[x * gridDj.column + (z - 1)].GetComponent("DijkstraNode") as DijkstraNode);                        //7
+                if ((x + 1) < gridDj.row && (z - 1) >= 0) n.adjacent.Add(gridDj.grid[((x + 1) * gridDj.column) + (z - 1)].GetComponent<DijkstraNode>());    //8
             }
         }
 
