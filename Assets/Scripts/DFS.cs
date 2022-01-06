@@ -39,7 +39,7 @@ public class DFS
         {
             _path.Add(_start);
             _start.Path = true;
-            return result;
+            //return result;
         }
         else
         {

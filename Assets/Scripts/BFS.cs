@@ -20,19 +20,13 @@ public class BFS
 
 
 
-    public List<Transform> Find(Game Transform _start, Game Transform _end)
+    public List<Transform> Find(Transform _start, Transform _end)//(BsfsDfsNode start)
     {
 
-        DijkstraNode currentNode = _start.GetComponent<DijkstraNode>();
-        // List<Transform> neighbours = currentNode.getNeighbourNode();
-        // foreach (Transform neighNode in neighbours)
-        // {
-        //     DijkstraNode node = neighNode.GetComponent<DijkstraNode>();
+        DijkstraNode currentNode = _start.gameObject.GetComponent<DijkstraNode>();
 
-        // We want to avoid those that had been explored and is not walkable.
-        if (unexplored.Contains(neighNode) && node.isWalkable())
 
-            currentNode.Visited = true;
+        currentNode.Visited = true;
         _order.Add(_start);
         _queue.Enqueue(_start);
 
@@ -40,10 +34,11 @@ public class BFS
         {
             // BfsDfs n = _queue.Dequeue();
             Transform n = _queue.Dequeue();
+            DijkstraNode t = n.gameObject.GetComponent<DijkstraNode>();
 
-            if (n.transform.position == end.position)
+            if (n.position == _end.position && (t.isWalkable()))
             {
-                DijkstraNode t = n.GetComponent<DijkstraNode>();// n is tranform and t is the corresponding node for that position
+                // n is tranform and t is the corresponding node for that position
                 while (t != null)
                 {
                     _path.Add(t);
@@ -53,15 +48,15 @@ public class BFS
                 }
                 _path.Reverse();
                 result.Reverse();
-                return true;
+                return result;
             }
             for (int i = 0; i < t.adjacent.Count; i++)
             {
-                if (t.adjacent[i].IsValid())
+                if (t.adjacent[i].IsValid() && (t.isWalkable()))
                 {
                     t.adjacent[i].parent = t;
                     t.adjacent[i].Visited = true;
-                    //how do i store the transform of the adjacent node in oder and enqueue  
+                    //how do i store the transform of the adjacent node in order and enqueue ?
                     _order.Add(t.adjacent[i].transform);
                     _queue.Enqueue(t.adjacent[i].transform);
                 }
@@ -69,9 +64,9 @@ public class BFS
 
         }
 
-        return false;
+        return result;
     }
 
-    public List<BfsDfsNode> GetPath() { return _path; }
-    public List<BfsDfsNode> GetOrder() { return _order; }
+    // public List<BfsDfsNode> GetPath() { return _path; }
+    // public List<BfsDfsNode> GetOrder() { return _order; }
 }

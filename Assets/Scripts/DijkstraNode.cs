@@ -24,7 +24,14 @@ public class DijkstraNode : MonoBehaviour
     public bool Visited = false;
     public bool Path = false;
     public List<DijkstraNode> adjacent = null;    //Used for ALL searches.
-    public DijkstraNode parent = null;            
+    public DijkstraNode parent = null;
+
+
+    public bool IsValid()
+    {
+        return !Visited;
+    }
+
 
     #endregion
 
