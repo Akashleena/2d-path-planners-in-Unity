@@ -28,6 +28,8 @@ public class DFS
     private List<BfsDfsNode> _path = new List<BfsDfsNode>();
     private List<BfsDfsNode> _order = new List<BfsDfsNode>();
 
+    public List<Transform> result = new List<Transform>();
+
     public bool Find(BfsDfsNode _start)
     {
         _start.Visited = true;
@@ -37,7 +39,7 @@ public class DFS
         {
             _path.Add(_start);
             _start.Path = true;
-            return true;
+            return result;
         }
         else
         {

@@ -36,10 +36,10 @@ public class Game : MonoBehaviour
         List<Transform> result = new List<Transform>();
 
         Transform node = (start, end);
-       int  _method = method;
+        int _method = method;
         startNode = start;
         endNode = end;
-   
+
         foreach (GameObject obj in nodes)
         {
             DijkstraNode n = obj.GetComponent<DijkstraNode>();
@@ -55,16 +55,16 @@ public class Game : MonoBehaviour
         n.F = 0;
         n.Path = false;
 
-        bool _found = false;
-  
+        List<Transform> result;
+
         switch (_method)
         {
             case 0: //DFS
-                _found = depth.Find(startNode);
+                result = depth.Find(startNode, endNode);
                 _path = depth.GetPath();
                 break;
             case 1: //BFS
-                _found = breadth.Find(startNode);
+                _found = breadth.Find(startNode, endNode);
                 _path = breadth.GetPath();
                 break;
 
@@ -99,11 +99,13 @@ public class Game : MonoBehaviour
                 Debug.Log("Search: Path Could not be found!");
             }
         }
-    
-
-    //Triggers the Search
 
 
+        //Triggers the Search
 
+
+
+    }
 }
+
 
