@@ -244,6 +244,20 @@ public class PlayerInput : MonoBehaviour
 
     }
 
+     public void btnFindRRTPath()
+    {
+        // Only find if there are start and end node.
+        if (startNode != null && endNode != null)
+        {
+
+            clearPreviousPath();
+            RRT rrtPath = gameObject.GetComponent<RRT>();
+            rrtPath.BeginSolving(10, startNode, endNode);
+            rrtPath.ContinueSolving();
+
+        }
+    }
+
 
 
 
