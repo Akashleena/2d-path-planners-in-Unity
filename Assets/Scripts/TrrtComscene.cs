@@ -59,7 +59,7 @@ public class TrrtComscene : MonoBehaviour
     };
 
 
-    public float stepSize = 1.0f;
+    public float stepSize = 10f;
 
     private GameObject[] dijkstranodes;
     public Text coordText;
@@ -86,12 +86,12 @@ public class TrrtComscene : MonoBehaviour
     public float endTime;  //to get the simulation time
     public float startTime;
     public float pGoToGoal = 0.1f;
-    public const int MAX_NUM_NODES = 500;
+    public const int MAX_NUM_NODES = 10000;
     public GameObject[] gameObjects;
     public GameObject csvObject;
     WriteToCSVFile writeToCsv;
     //public float levelTimer;
-   // public bool updateTimer = true;
+    // public bool updateTimer = true;
     public float pathCost = 0;
     //public List<Vector3> obstacleCoord;
     public List<Transform> obstaclenodes = new List<Transform>();
@@ -112,17 +112,17 @@ public class TrrtComscene : MonoBehaviour
 
         startTime = Time.realtimeSinceStartup;
 
-        minX = -25;
-        maxX = 24;
+        minX = 0;
+        maxX = 250;
 
-        minZ = -25;
+        minZ = 0;
 
-        maxZ = 24;
+        maxZ = 250;
         minHeight = 0;
-        maxHeight = 2;
+        maxHeight = 1;
         Debug.Log("maxHeight" + maxHeight);
         //stepSize = 10; //TODO experiment
-       // levelTimer = 0.0f;
+        // levelTimer = 0.0f;
 
 
     }
@@ -171,10 +171,10 @@ public class TrrtComscene : MonoBehaviour
                 TRRTGrow();
                 // solving = false;
             }
-			else
-			{
-				solving = false;
-			}
+            else
+            {
+                solving = false;
+            }
         }
     }
 
@@ -206,7 +206,7 @@ public class TrrtComscene : MonoBehaviour
             i = n.parentInd;
 
         }
-       // updateTimer = false;
+        // updateTimer = false;
         endTime = (Time.realtimeSinceStartup - startTime);
         Debug.Log("Solved! with " + nodes.Count + " nodes, cost=" + pathCost);
         writeToCsv.WriteCSV("TRRT", endTime, pathCost, nodes.Count);
@@ -239,9 +239,9 @@ public class TrrtComscene : MonoBehaviour
             // Debug.Log("obstaclesList[j][0]" + obstaclesList[j][0]);
             // Debug.Log("obstaclesList[j][3]" + obstaclesList[j][3]);
             pos1.y = obstaclenodes[j].transform.position.y;
-			float dx = pos1.x - obstaclenodes[j].transform.position.x;
-			float dz = pos1.z - obstaclenodes[j].transform.position.z;
-			float dist = Mathf.Sqrt(dx*dx - dz*dz);
+            float dx = pos1.x - obstaclenodes[j].transform.position.x;
+            float dz = pos1.z - obstaclenodes[j].transform.position.z;
+            float dist = Mathf.Sqrt(dx * dx - dz * dz);
             if (dist <= 1.7f)
             {
                 Debug.Log("new Node will be generated inside obstacle so we don't add it to the nodes list");
@@ -339,9 +339,9 @@ public class TrrtComscene : MonoBehaviour
                     n = new Node(pos, nodes[closestInd].pos, closestInd, gameObject);
                     nodes.Add(n);
                     Debug.Log("Added node " + nodes.Count + ": " + n.pos.x + ", " + n.pos.y + ", " + n.pos.z);
-                   // if (updateTimer)
-                     //   levelTimer += Time.deltaTime;
-                   // Debug.Log("levelTimer" + levelTimer);
+                    // if (updateTimer)
+                    //   levelTimer += Time.deltaTime;
+                    // Debug.Log("levelTimer" + levelTimer);
 
 
                     //Determine whether we are close enough to goal
@@ -369,10 +369,10 @@ public class TrrtComscene : MonoBehaviour
                     }
                     numAttempts++;
                 }
-				else
-				{
-					needNewTarget = true;
-				}
+                else
+                {
+                    needNewTarget = true;
+                }
             }
             else
             {

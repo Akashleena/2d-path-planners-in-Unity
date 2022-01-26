@@ -78,16 +78,16 @@ public class RRT : MonoBehaviour
     public float extendAngle = 0f;
     public Transform startNode;
     public Transform endNode;
-   
+
     public float endTime;  //to get the simulation time
     public float startTime;
     public float pGoToGoal = 0.1f;
-    public const int MAX_NUM_NODES = 500;
+    public const int MAX_NUM_NODES = 10000;
     public GameObject[] gameObjects;
     public GameObject csvObject;
     WriteToCSVFile writeToCsv;
     //public float levelTimer;
-   // public bool updateTimer = true;
+    // public bool updateTimer = true;
     public float pathCost = 0;
     //public List<Vector3> obstacleCoord;
     public List<Transform> obstaclenodes = new List<Transform>();
@@ -108,17 +108,17 @@ public class RRT : MonoBehaviour
 
         startTime = Time.realtimeSinceStartup;
 
-        minX = -24.5f;
-        maxX = 24.5f;
+        minX = 0f;
+        maxX = 250f;
 
-        minZ = -24.5f;
+        minZ = 0f;
 
-        maxZ = 24.5f;
+        maxZ = 250f;
         minHeight = 0;
         maxHeight = 0;
         Debug.Log("maxHeight" + maxHeight);
         //stepSize = 10; //TODO experiment
-       // levelTimer = 0.0f;
+        // levelTimer = 0.0f;
 
 
     }
@@ -167,10 +167,10 @@ public class RRT : MonoBehaviour
                 RRTGrow();
                 // solving = false;
             }
-			else
-			{
-				solving = false;
-			}
+            else
+            {
+                solving = false;
+            }
         }
     }
 
@@ -202,7 +202,7 @@ public class RRT : MonoBehaviour
             i = n.parentInd;
 
         }
-       // updateTimer = false;
+        // updateTimer = false;
         endTime = (Time.realtimeSinceStartup - startTime);
         Debug.Log("Solved! with " + nodes.Count + " nodes, cost=" + pathCost);
         writeToCsv.WriteCSV("RRT", endTime, pathCost, nodes.Count);
@@ -235,9 +235,9 @@ public class RRT : MonoBehaviour
             // Debug.Log("obstaclesList[j][0]" + obstaclesList[j][0]);
             // Debug.Log("obstaclesList[j][3]" + obstaclesList[j][3]);
             pos1.y = obstaclenodes[j].transform.position.y;
-			float dx = pos1.x - obstaclenodes[j].transform.position.x;
-			float dz = pos1.z - obstaclenodes[j].transform.position.z;
-			float dist = Mathf.Sqrt(dx*dx - dz*dz);
+            float dx = pos1.x - obstaclenodes[j].transform.position.x;
+            float dz = pos1.z - obstaclenodes[j].transform.position.z;
+            float dist = Mathf.Sqrt(dx * dx - dz * dz);
             if (dist <= 1.7f)
             {
                 Debug.Log("new Node will be generated inside obstacle so we don't add it to the nodes list");
@@ -328,50 +328,50 @@ public class RRT : MonoBehaviour
             pos = new Vector3(nodes[closestInd].pos.x + stepSize * Mathf.Cos(extendAngle), 0f, nodes[closestInd].pos.z + stepSize * Mathf.Sin(extendAngle));
             pos.y = 0; //get y value from terrain
 
-            
-                if (!(isNodeinsideObstacle(pos)))
+
+            if (!(isNodeinsideObstacle(pos)))
+            {
+                n = new Node(pos, nodes[closestInd].pos, closestInd, gameObject);
+                nodes.Add(n);
+                Debug.Log("Added node " + nodes.Count + ": " + n.pos.x + ", " + n.pos.y + ", " + n.pos.z);
+                // if (updateTimer)
+                //   levelTimer += Time.deltaTime;
+                // Debug.Log("levelTimer" + levelTimer);
+
+
+                //Determine whether we are close enough to goal
+                dx = endNode.position.x - n.pos.x;
+                dz = endNode.position.z - n.pos.z;
+                if (Mathf.Sqrt(dx * dx + dz * dz) <= stepSize)
                 {
-                    n = new Node(pos, nodes[closestInd].pos, closestInd, gameObject);
-                    nodes.Add(n);
-                    Debug.Log("Added node " + nodes.Count + ": " + n.pos.x + ", " + n.pos.y + ", " + n.pos.z);
-                   // if (updateTimer)
-                     //   levelTimer += Time.deltaTime;
-                   // Debug.Log("levelTimer" + levelTimer);
-
-
-                    //Determine whether we are close enough to goal
-                    dx = endNode.position.x - n.pos.x;
-                    dz = endNode.position.z - n.pos.z;
-                    if (Mathf.Sqrt(dx * dx + dz * dz) <= stepSize)
-                    {
-                        //Reached the goal!
-                        FoundGoal();
-                        return;
-                    }
-
-                    //Determine whether we are close enough to target, or need to keep extending
-                    dx = tx - n.pos.x;
-                    dz = tz - n.pos.z;
-                    if (Mathf.Sqrt(dx * dx + dz * dz) <= stepSize)
-                    {
-                        //we've reached our target point, need a new target
-                        needNewTarget = true;
-                    }
-                    else
-                    {
-                        //keep extending from the latest node
-                        closestInd = nodes.Count - 1;
-                    }
-                    numAttempts++;
+                    //Reached the goal!
+                    FoundGoal();
+                    return;
                 }
-				else
-				{
-					needNewTarget = true;
-				}
-            
-           
+
+                //Determine whether we are close enough to target, or need to keep extending
+                dx = tx - n.pos.x;
+                dz = tz - n.pos.z;
+                if (Mathf.Sqrt(dx * dx + dz * dz) <= stepSize)
+                {
+                    //we've reached our target point, need a new target
+                    needNewTarget = true;
+                }
+                else
+                {
+                    //keep extending from the latest node
+                    closestInd = nodes.Count - 1;
+                }
+                numAttempts++;
+            }
+            else
+            {
+                needNewTarget = true;
+            }
+
+
         }
     }
 
-   
+
 }
